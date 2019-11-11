@@ -1,9 +1,34 @@
+const charts = {};
+
+let typeFilter = "";
+let statusFilter = "";
+
+function setTypeFilter(type) {
+    typeFilter = type;
+    refreshCharts();
+}
+
+function setStatusFilter(status) {
+    statusFilter = status;
+    refreshCharts();
+}
+
+function generateUrlParameters() {
+    return `type=${typeFilter}&status=${statusFilter}`;
+}
+
 async function setupChoroplethMap(target) {
-    const response = await axios.get(`/api/${target}`);
+    const response = await axios.get(`/api/${target}?${generateUrlParameters()}`);
     const rawData = response.data;
+
+    // Destroy previous map, if any.
+    if (charts[target]) {
+        charts[target].dispose();
+    }
 
     // Create map instance
     const chart = am4core.create(target, am4maps.MapChart);
+    charts[target] = chart;
 
     // Set map definition
     chart.geodata = am4geodata_usaLow;
@@ -55,10 +80,15 @@ async function setupChoroplethMap(target) {
     hs.properties.fill = am4core.color("#3c5bdc");
 }
 
-am4core.ready(function() {
-    am4core.useTheme(am4themes_animated);
-
+function _refreshCharts() {
+    setupChoroplethMap('policyholders_by_state');
     setupChoroplethMap('premiums_by_state');
     setupChoroplethMap('age_by_state');
     setupChoroplethMap('accidents_by_state')
+}
+const refreshCharts = _.debounce(_refreshCharts);
+
+am4core.ready(function() {
+    am4core.useTheme(am4themes_animated);
+    refreshCharts();
 });

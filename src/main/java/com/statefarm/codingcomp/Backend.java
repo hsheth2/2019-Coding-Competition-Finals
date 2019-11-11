@@ -1,23 +1,43 @@
 package com.statefarm.codingcomp;
 
-import com.statefarm.codingcomp.Analyzer;
 import com.google.gson.Gson;
+import com.statefarm.codingcomp.enums.PolicyStatus;
+import com.statefarm.codingcomp.model.Policy;
+import spark.Request;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 import static spark.Spark.*;
 public class Backend {
-    /*
-    public static String loadJson(String fileName) throws IOException {
-        Gson gson = new Gson();
-        CodingCompCSVUtil util = new CodingCompCSVUtil();
-        List<List<String>> records = util.readCSVFileWithoutHeaders(fileName);
-        List<DisasterDescription> dds = records.stream().map(DisasterDescription::new).collect(Collectors.toList());
-        return gson.toJson(dds);
+    public static Predicate<Policy> filterFromUrlParams(Request req) {
+        String status = req.queryParams("status");
+        Predicate<Policy> statusFilter = (policy -> {
+            switch (status) {
+                case "active":
+                    return policy.getPolicyStatus() == PolicyStatus.ACTIVE;
+                case "cancel-holder":
+                    return policy.getPolicyStatus() == PolicyStatus.CANCELLED_BY_POLICYHOLDER;
+                case "cancel-company":
+                    return policy.getPolicyStatus() == PolicyStatus.CANCELLED_BY_COMPANY;
+                default:
+                    return true;
+            }
+        });
+
+        String type = req.queryParams("type");
+        Predicate<Policy> typeFilter = (policy -> {
+            switch (type) {
+                case "renters":
+                    return policy.getPolicyType().equals("Renters");
+                case "private-passenger":
+                    return policy.getPolicyType().equals("Private Passenger");
+                default:
+                    return true;
+            }
+        });
+
+        return statusFilter.and(typeFilter);
     }
-     */
 
     public static void main(String[] args) throws Exception {
         Analyzer analyzer = new Analyzer();
@@ -28,19 +48,24 @@ public class Backend {
         //staticFiles.location("html");
         staticFiles.externalLocation("/home/hsheth/data/projects/statefarm-coding-comp-2019-finals/src/main/resources/html");
 
+        get("/api/policyholders_by_state", (req, res) -> {
+            res.type("application/json");
+            return gson.toJson(analyzer.getPolicyHoldersByState(filterFromUrlParams(req)));
+        });
+
         get("/api/premiums_by_state", (req, res) -> {
             res.type("application/json");
-            return gson.toJson(analyzer.getPremiumsByState());
+            return gson.toJson(analyzer.getPremiumsByState(filterFromUrlParams(req)));
         });
 
         get("/api/age_by_state", (req, res) -> {
             res.type("application/json");
-            return gson.toJson(analyzer.getAgeByState());
+            return gson.toJson(analyzer.getAgeByState(filterFromUrlParams(req)));
         });
 
         get("/api/accidents_by_state", (req, res) -> {
             res.type("application/json");
-            return gson.toJson(analyzer.getNumAccidentsByState());
+            return gson.toJson(analyzer.getNumAccidentsByState(filterFromUrlParams(req)));
         });
     }
 

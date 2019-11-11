@@ -5,12 +5,15 @@
     <meta charset="utf-8">
 
     <title>State Farm Policy Visualizer</title>
-    <style>
-        .chart {
-            width: 100%;
-            height: 500px;
-        }
-    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
@@ -21,18 +24,113 @@
     <script src="https://www.amcharts.com/lib/4/themes/kelly.js"></script>
 
     <script src="x_by_state.js"></script>
+
+    <style>
+        .chart {
+            width: 100%;
+            height: 400px;
+        }
+
+        .pad {
+            padding-top: 30px !important;
+        }
+    </style>
+
 </head>
 
 <body>
 
-<h1>Average Premium by State</h1>
-<div id="premiums_by_state" class="chart chart_by_state"></div>
+<h1 class="ui center aligned header">State Farm Policy Visualizer</h1>
 
-<h1>Average Age by State</h1>
-<div id="age_by_state" class="chart chart_by_state"></div>
+<div class="ui container">
+    <b>Policy Type: </b>
+    <div id="type-select" class="ui selection dropdown">
+        <div class="text"></div>
+        <i class="dropdown icon"></i>
+    </div>
 
-<h1>Average Number of Accidents by State</h1>
-<div id="accidents_by_state" class="chart chart_by_state"></div>
+    <br/>
+
+    <b>Policy Status: </b>
+    <div id="status-select" class="ui selection dropdown">
+        <div class="text"></div>
+        <i class="dropdown icon"></i>
+    </div>
+</div>
+
+<div class="ui container">
+    <h2 class="ui center aligned header pad">
+        Policy Holders by State
+    </h2>
+    <div id="policyholders_by_state" class="chart chart_by_state"></div>
+</div>
+
+<div class="ui container">
+    <h2 class="ui center aligned header pad">
+        Average Premium by State
+    </h2>
+    <div id="premiums_by_state" class="chart chart_by_state"></div>
+</div>
+
+<div class="ui container">
+    <h2 class="ui center aligned header pad">
+        Average Age by State
+    </h2>
+    <div id="age_by_state" class="chart chart_by_state"></div>
+</div>
+
+<div class="ui container">
+    <h2 class="ui center aligned header pad">
+        Average Number of Accidents by State
+    </h2>
+    <div id="accidents_by_state" class="chart chart_by_state"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#type-select').dropdown({
+            values: [
+                {
+                    name: 'All',
+                    value: 'all',
+                    selected: true,
+                },
+                {
+                    name: 'Renters',
+                    value: 'renters',
+                },
+                {
+                    name: 'Private Passenger',
+                    value: 'private-passenger',
+                },
+            ],
+            onChange: setTypeFilter,
+        });
+
+        $('#status-select').dropdown({
+            values: [
+                {
+                    name: 'All',
+                    value: 'all',
+                    selected: true,
+                },
+                {
+                    name: 'Active',
+                    value: 'active',
+                },
+                {
+                    name: 'Cancelled by Policy Holder',
+                    value: 'cancel-holder',
+                },
+                {
+                    name: 'Cancelled by Company',
+                    value: 'cancel-company',
+                },
+            ],
+            onChange: setStatusFilter,
+        })
+    })
+</script>
 
 </body>
 </html>
