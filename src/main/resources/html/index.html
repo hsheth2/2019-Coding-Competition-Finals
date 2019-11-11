@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>State Farm Policy Visualizer</title>
+    <style>
+        .chart {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/maps.js"></script>
+    <script src="https://www.amcharts.com/lib/4/geodata/usaLow.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/kelly.js"></script>
+
+    <script src="x_by_state.js"></script>
+</head>
+
+<body>
+
+<h1>Average Premium by State</h1>
+<div id="premiums_by_state" class="chart chart_by_state"></div>
+
+<h1>Average Age by State</h1>
+<div id="age_by_state" class="chart chart_by_state"></div>
+
+<h1>Average Number of Accidents by State</h1>
+<div id="accidents_by_state" class="chart chart_by_state"></div>
+
+</body>
+</html>
