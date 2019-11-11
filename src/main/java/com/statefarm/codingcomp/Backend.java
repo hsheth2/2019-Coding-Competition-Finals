@@ -45,8 +45,8 @@ public class Backend {
 
         System.out.println("Running on: http://localhost:4567");
 
-        //staticFiles.location("html");
-        staticFiles.externalLocation("/home/hsheth/data/projects/statefarm-coding-comp-2019-finals/src/main/resources/html");
+        staticFiles.location("html");
+        //staticFiles.externalLocation("/home/hsheth/data/projects/statefarm-coding-comp-2019-finals/src/main/resources/html");
 
         get("/api/policyholders_by_state", (req, res) -> {
             res.type("application/json");
