@@ -1,8 +1,9 @@
-Team Name(s):  
+Team Name(s): Harshal Sheth
 
 Document and describe any enhancements included to help the judges properly grade your submission.
-	Step 1:
-	Step 2: 
-	
-	
+	Step 1: I built a visualizer for the policy data, which graphs a variety of data by state. The idea is that State Farm can then consider this data in conjunction with relevant natural disaster data and past claims history to produce more informed decisions.
+	Step 2: To run the visualizer, simply run the main method of the Backend class, and then navigate over to http://localhost:4567. You can also use the filters to narrow down and refine the data.
+
+
 Feedback for the coding competition?  Things you would like to see in future events?
+This was a pretty interesting problem.
